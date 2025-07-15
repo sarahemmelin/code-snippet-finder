@@ -19,6 +19,12 @@
       "csp": null
     }
   },
+  "plugins": {
+  "fs": {
+    "readTextFile": true,
+    "writeFile": true
+  }
+},
   "bundle": {
     "active": true,
     "targets": "all",
