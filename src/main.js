@@ -1,15 +1,20 @@
+const DEBUG = true; 
+
+function log(...args) {
+  if (DEBUG) { 
+    console.log(...args);
+  };
+};
+
+
+let configPath;
+
 window.addEventListener('DOMContentLoaded', async () => {
-  console.log('Tauri ready?', window.__TAURI__);
+  log('Tauri ready?', window.__TAURI__);
   const { fs, path } = window.__TAURI__;
-  console.log('fs module:', fs);
-  console.log('path module:', path);
-
-  const configDir = await path.appConfigDir();
-  console.log('Config directory is:', configDir);
-  const configPath = configDir + 'csf-config.json';
-  console.log('Config file path:', configPath);
+  log('fs module:', fs);
+  log('path module:', path);
 });
-
 
 const resizer = document.querySelector('.resizer-left');
 
@@ -39,6 +44,15 @@ function onMouseMove(e) {
 function onMouseUp() {
   document.removeEventListener('mousemove', onMouseMove);
   document.removeEventListener('mouseup', onMouseUp);
+
+const width = parseInt(document.querySelector('.left-sidebar').style.width);
+log("Saving new sidebar width to config:", width);
+
+window.__TAURI__.core.invoke("save_sidebar_width", {
+  payload: { width: parseInt(document.querySelector('.left-sidebar').style.width) }
+})
+.then(() => log("Config saved via Rust command"))
+.catch(err => console.error("Rust save failed:", err));
 };
 
 

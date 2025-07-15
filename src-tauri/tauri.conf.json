@@ -21,8 +21,11 @@
   },
   "plugins": {
   "fs": {
-    "readTextFile": true,
-    "writeFile": true
+    "scope": ["config"],
+    "defaultPath": "config",
+    "allowWrite": {
+      "config": true
+    }
   }
 },
   "bundle": {

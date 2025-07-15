@@ -1,0 +1,9 @@
+{
+  "identifier": "fs-write",
+  "windows": ["main"],
+  "permissions": [
+    "fs:allow-app-write",
+    "fs:allow-app-write-recursive"
+  ],
+  "scope": []
+}
