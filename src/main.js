@@ -17,9 +17,7 @@ const rightSidebar = document.querySelector('.right-sidebar');
 
 window.addEventListener('DOMContentLoaded', async () => {
   log('DOM fully loaded');
-
   log('Tauri ready?', window.__TAURI__);
-
 
   const invoke = window.__TAURI__?.core?.invoke;
 
@@ -56,6 +54,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   function onMouseMove(e) {
     const minWidth = 150;
     const paddingBetween = 50;
+
+    if (!rightResizer) {
+      console.warn("Right resizer not found. Skipping clamp.");
+    return;
+  }
 
     const maxAllowedWidth = rightResizer.offsetLeft - paddingBetween;
     let newWidth = e.clientX;
