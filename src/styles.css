@@ -109,3 +109,10 @@ height: 100vh;
   background-color: #444;
   flex-shrink: 0;
 }
+
+.resizer-right {
+  width: 5px;
+  cursor: col-resize;
+  background-color: #444;
+  flex-shrink: 0;
+}

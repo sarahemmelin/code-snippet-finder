@@ -6,16 +6,21 @@ function log(...args) {
     console.log(...args);
   }
 };
+// --- END DEBUG MODE ---------
+
+const rightResizer = document.querySelector('.resizer-right');
+const leftResizer = document.querySelector('.resizer-left');
+const sidebar = document.querySelector('.left-sidebar');
+const appWrapper = document.querySelector('.app-wrapper');
+const rightSidebar = document.querySelector('.right-sidebar');
+
 
 window.addEventListener('DOMContentLoaded', async () => {
   log('DOM fully loaded');
 
-  const sidebar = document.querySelector('.left-sidebar');
-  const resizer = document.querySelector('.resizer-left');
-
   log('Tauri ready?', window.__TAURI__);
 
-  // Try loading saved sidebar width
+
   const invoke = window.__TAURI__?.core?.invoke;
 
   if (typeof invoke === 'function') {
@@ -37,30 +42,36 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
 
+  //-- Mouse listeners inside DOMContentLoaded-----------------------
 
-  resizer.addEventListener('mousedown', onMouseDown);
-
+  leftResizer.addEventListener('mousedown', onMouseDown);
+  
+  // Mouse down 
   function onMouseDown(e) {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   }
 
+  // Mouse move
   function onMouseMove(e) {
     const minWidth = 150;
-    const maxWidth = 500;
+    const paddingBetween = 50;
+
+    const maxAllowedWidth = rightResizer.offsetLeft - paddingBetween;
     let newWidth = e.clientX;
 
     if (newWidth < minWidth) {
       newWidth = minWidth;
     }
 
-    if (newWidth > maxWidth) {
-      newWidth = maxWidth;
+    if (newWidth > maxAllowedWidth) {
+      newWidth = maxAllowedWidth;
     }
 
     sidebar.style.width = `${newWidth}px`;
   }
 
+  // Mouse up
   function onMouseUp() {
   document.removeEventListener('mousemove', onMouseMove);
   document.removeEventListener('mouseup', onMouseUp);
@@ -83,6 +94,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 }
 });
 
-
+//-- End mouse listeners -----------------------
 
 
