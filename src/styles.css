@@ -105,14 +105,18 @@ height: 100vh;
 /* -- Resizers --------------------------------------- */
 .resizer-left {
   width: 5px;
-  cursor: col-resize;
+  cursor: ew-resize;
   background-color: #444;
   flex-shrink: 0;
+  z-index: 2;
+  position: relative;
 }
 
 .resizer-right {
   width: 5px;
-  cursor: col-resize;
+  cursor: ew-resize;
   background-color: #444;
   flex-shrink: 0;
+  z-index: 2;
+  position: relative;
 }

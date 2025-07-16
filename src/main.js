@@ -42,16 +42,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   //-- Mouse listeners inside DOMContentLoaded-----------------------
 
-  leftResizer.addEventListener('mousedown', onMouseDown);
+  leftResizer.addEventListener('mousedown', onMouseDownLeft);
+  rightResizer.addEventListener('mousedown', onMouseDownRight);
   
+  // LEFT RESIZER ---------------------------------------------------
   // Mouse down 
-  function onMouseDown(e) {
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+  function onMouseDownLeft(e) {
+    document.addEventListener('mousemove', onMouseMoveLeft);
+    document.addEventListener('mouseup', onMouseUpLeft);
   }
 
   // Mouse move
-  function onMouseMove(e) {
+  function onMouseMoveLeft(e) {
     const minWidth = 150;
     const paddingBetween = 50;
 
@@ -75,9 +77,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Mouse up
-  function onMouseUp() {
-  document.removeEventListener('mousemove', onMouseMove);
-  document.removeEventListener('mouseup', onMouseUp);
+  function onMouseUpLeft(e) {
+  document.removeEventListener('mousemove', onMouseMoveLeft);
+  document.removeEventListener('mouseup', onMouseUpLeft);
 
   const width = parseInt(sidebar.style.width);
   log("Saving new sidebar width to config:", width);
@@ -97,6 +99,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 }
 });
 
-//-- End mouse listeners -----------------------
+  // RIGHT RESIZER --------------------------------------------------
+  // Mouse down
+  function onMouseDownRight(e) {
+    document.addEventListener('mousemove', onMouseMoveRight);
+    document.addEventListener('mouseup', onMouseUpRight);
+  }
 
+  // Mouse move
+  function onMouseMoveRight(e) {
 
+  }
+
+// Mouse up
+  function onMouseUpRight(e) {
+  }
