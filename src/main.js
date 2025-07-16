@@ -15,6 +15,29 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   log('Tauri ready?', window.__TAURI__);
 
+  // Try loading saved sidebar width
+  const invoke = window.__TAURI__?.core?.invoke;
+
+  if (typeof invoke === 'function') {
+    invoke("load_sidebar_width")
+      .then((savedWidth) => {
+        log("Loaded saved sidebar width:", savedWidth);
+        const minWidth = 150;
+        const maxWidth = 500;
+
+        if (savedWidth >= minWidth && savedWidth <= maxWidth) {
+          sidebar.style.width = `${savedWidth}px`;
+        } else {
+          log("Saved width out of bounds, ignoring.");
+        }
+      })
+      .catch((err) => {
+        log("No config file found or failed to load:", err);
+      });
+  }
+
+
+
   resizer.addEventListener('mousedown', onMouseDown);
 
   function onMouseDown(e) {
