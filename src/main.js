@@ -1,3 +1,16 @@
+/*
+TO DO:
+1. Implementere funksjonalitet for right sidebar resizer.
+   - Denne skal fungere på samme måte som left sidebar res
+2. Lagre bredden på right sidebar i config-filen. 
+   - Bruker samme metode som left sidebar.
+3. Error - handling, ref Christian.
+4. Teste begge resizers for å se at de fungerer som forventet.
+5. Sjekke at right sidebar resizer ikke kræsjer med left sidebar resizer, og ikke går utenfor skjermen.
+6. Refaktorere koden, fjerne duplikater og rydde enda mer.
+6. Lage dokumentasjon for hvordan dette fungerer.
+*/
+
 // --- DEBUG MODE -----------
 const DEBUG = true;
 
@@ -111,6 +124,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   }
 
-// Mouse up
+  // Mouse up
   function onMouseUpRight(e) {
   }
