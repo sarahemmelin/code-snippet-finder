@@ -1,14 +1,14 @@
 /*
 TO DO:
-1. Implementere funksjonalitet for right sidebar resizer.
+[X] 1. Implementere funksjonalitet for right sidebar resizer.
    - Denne skal fungere på samme måte som left sidebar res
-2. Lagre bredden på right sidebar i config-filen. 
+[X] 2. Lagre bredden på right sidebar i config-filen. 
    - Bruker samme metode som left sidebar.
 3. Error - handling, ref Christian.
-4. Teste begge resizers for å se at de fungerer som forventet.
-5. Sjekke at right sidebar resizer ikke kræsjer med left sidebar resizer, og ikke går utenfor skjermen.
+[X] 4. Teste begge resizers for å se at de fungerer som forventet.
+[X] 5. Sjekke at right sidebar resizer ikke kræsjer med left sidebar resizer, og ikke går utenfor skjermen.
 6. Refaktorere koden, fjerne duplikater og rydde enda mer.
-6. Lage dokumentasjon for hvordan dette fungerer.
+7. Lage dokumentasjon for hvordan dette fungerer.
 */
 
 // --- DEBUG MODE -----------
@@ -20,6 +20,17 @@ function log(...args) {
   }
 };
 // --- END DEBUG MODE ---------
+
+// --- HELP FUNCTIONS ---------
+function getMinWidthPx(elementSelector, fallback) {
+  const element = typeof elementSelector === "String" ? document.querySelector(elementSelector) : elementSelector;
+  if (!element) {
+    return fallback;
+  }
+  return parseInt(getComputedStyle(element).minWidth) || fallback;
+}
+// --- END HELP FUNCTIONS -----
+
 
 const rightResizer = document.querySelector('.resizer-right');
 const leftResizer = document.querySelector('.resizer-left');
@@ -52,6 +63,33 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
   }
 
+if (typeof invoke === 'function') {
+  invoke("load_right_sidebar_width")
+    .then((savedRight) => {
+      log("Loaded saved RIGHT width:", savedRight);
+
+      if (!savedRight || savedRight <= 0) return;
+
+      const rightMin = getMinWidthPx(rightSidebar, 160);
+      const mainMin  = getMinWidthPx('.main-area', 300);
+
+      const total = appWrapper.clientWidth;
+      const leftW = sidebar.offsetWidth;
+
+      const leftResizerW  = leftResizer.offsetWidth  || 5;
+      const rightResizerW = rightResizer.offsetWidth || 5;
+      const maxRight = total - leftW - leftResizerW - rightResizerW - mainMin;
+
+      let applied = savedRight;
+      if (applied < rightMin) applied = rightMin;
+      if (applied > maxRight) applied = Math.max(rightMin, maxRight);
+
+      rightSidebar.style.width = `${applied}px`;
+    })
+    .catch((err) => {
+      log("No right width found or failed to load:", err);
+    });
+}
 
   //-- Mouse listeners inside DOMContentLoaded-----------------------
 
@@ -120,8 +158,8 @@ function onMouseMoveLeft(e) {
   // Mouse move
 function onMouseMoveRight(e) {
   const rect = appWrapper.getBoundingClientRect();
-  const rightMin = parseInt(getComputedStyle(rightSidebar).minWidth) || 160;
-  const mainMin  = parseInt(getComputedStyle(document.querySelector('.main-area')).minWidth) || 300;
+  const rightMin = getMinWidthPx(rightSidebar, 160);
+  const mainMin  = getMinWidthPx('.main-area', 300);
 
   const total = appWrapper.clientWidth;
   const leftW  = sidebar.offsetWidth;
@@ -142,4 +180,15 @@ function onMouseMoveRight(e) {
   function onMouseUpRight(e) {
     document.removeEventListener('mousemove', onMouseMoveRight);
     document.removeEventListener('mouseup', onMouseUpRight);
+  const width = parseInt(rightSidebar.offsetWidth);
+
+  const invoke = window.__TAURI__?.core?.invoke;
+  if (typeof invoke !== 'function') {
+    console.error("Tauri not ready: 'invoke' is undefined.");
+    return;
   }
+
+  invoke("save_right_sidebar_width", { payload: { width } })
+    .then(() => log("Right sidebar width saved:", width))
+    .catch(err => console.error("Failed to save right sidebar width:", err));
+}
