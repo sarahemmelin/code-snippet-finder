@@ -16,9 +16,17 @@ fn save_sidebar_width(payload: SidebarWidthPayload) -> Result<(), String> {
     let mut path = PathBuf::from(config_dir);
     path.push("csf-config.json");
 
-    let data = format!(r#"{{ "sidebarWidth": {} }}"#, payload.width);
+    let mut config: serde_json::Value = if path.exists() {
+        let data = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+        serde_json::from_str(&data).unwrap_or_else(|_| serde_json::json!({}))
+    } else {
+        serde_json::json!({})
+    };
 
-    fs::write(&path, data).map_err(|e| e.to_string())?;
+    config["sidebarWidth"] = serde_json::json!(payload.width);
+
+    fs::write(&path, serde_json::to_string_pretty(&config).unwrap())
+        .map_err(|e| e.to_string())?;
 
     Ok(())
 }
@@ -44,7 +52,7 @@ struct RightSidebarWidthPayload {
 fn save_right_sidebar_width(payload: RightSidebarWidthPayload) -> Result<(), String> {
     let config_dir = dirs::config_dir().ok_or("Could not resolve config directory")?;
     let mut path = PathBuf::from(config_dir);
-    path.push("csg-config.json");
+    path.push("csf-config.json");
 
     //Leser eksisterende config (om den finnes - vi har ingen handler for det ennå)
     let mut config: serde_json::Value = if path.exists() {
