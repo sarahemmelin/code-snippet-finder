@@ -66,28 +66,26 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Mouse move
-  function onMouseMoveLeft(e) {
-    const minWidth = 150;
-    const paddingBetween = 50;
+function onMouseMoveLeft(e) {
+  const rect = appWrapper.getBoundingClientRect();
+  const leftMin  = parseInt(getComputedStyle(sidebar).minWidth) || 150;
+  const mainMin  = parseInt(getComputedStyle(document.querySelector('.main-area')).minWidth) || 300;
 
-    if (!rightResizer) {
-      console.warn("Right resizer not found. Skipping clamp.");
-    return;
-  }
+  const total = appWrapper.clientWidth;
+  const leftResizerW  = leftResizer.offsetWidth  || 5;
+  const rightResizerW = rightResizer.offsetWidth || 5;
+  const currentRightW = rightSidebar.offsetWidth;
 
-    const maxAllowedWidth = rightResizer.offsetLeft - paddingBetween;
-    let newWidth = e.clientX;
+  let maxLeft = total - leftResizerW - rightResizerW - currentRightW - mainMin;
+  if (maxLeft < leftMin) maxLeft = leftMin;
 
-    if (newWidth < minWidth) {
-      newWidth = minWidth;
-    }
+  let newWidth = e.clientX - rect.left;
 
-    if (newWidth > maxAllowedWidth) {
-      newWidth = maxAllowedWidth;
-    }
+  if (newWidth < leftMin) newWidth = leftMin;
+  if (newWidth > maxLeft) newWidth = maxLeft;
 
-    sidebar.style.width = `${newWidth}px`;
-  }
+  sidebar.style.width = `${newWidth}px`;
+}
 
   // Mouse up
   function onMouseUpLeft(e) {
@@ -120,28 +118,25 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Mouse move
-  function onMouseMoveRight(e) {
-    const minRightWidth = 160;
-    const minMainWidth = 300;
-    const total = appWrapper.clientWidth;
-    const leftW = sidebar.offsetWidth;
-    const leftResizerW = leftResizer.offsetWidth || 5;
-    const rightResizerW = rightResizer.offsetWidth || 5;
+function onMouseMoveRight(e) {
+  const rect = appWrapper.getBoundingClientRect();
+  const rightMin = parseInt(getComputedStyle(rightSidebar).minWidth) || 160;
+  const mainMin  = parseInt(getComputedStyle(document.querySelector('.main-area')).minWidth) || 300;
 
-    let newRightW = total - e.clientX;
+  const total = appWrapper.clientWidth;
+  const leftW  = sidebar.offsetWidth;
+  const leftResizerW  = leftResizer.offsetWidth  || 5;
+  const rightResizerW = rightResizer.offsetWidth || 5;
 
-    if (newRightW < minRightWidth) {
-      newRightW = minRightWidth;
-    }
+  let newRightW = rect.right - e.clientX;
 
-    const maxRightW = total - leftW - leftResizerW - rightResizerW - minMainWidth;
-    if (newRightW > maxRightW) {
-      newRightW = Math.max(minRightWidth, maxRightW);
-    }
+  const maxRightW = total - leftW - leftResizerW - rightResizerW - mainMin;
 
-    rightSidebar.style.width = `${newRightW}px`;
+  if (newRightW < rightMin) newRightW = rightMin;
+  if (newRightW > maxRightW) newRightW = Math.max(rightMin, maxRightW);
 
-  }
+  rightSidebar.style.width = `${newRightW}px`;
+}
 
   // Mouse up
   function onMouseUpRight(e) {
