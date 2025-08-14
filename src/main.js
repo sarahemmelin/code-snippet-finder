@@ -145,4 +145,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // Mouse up
   function onMouseUpRight(e) {
+    document.removeEventListener('mousemove', onMouseMoveRight);
+    document.removeEventListener('mouseup', onMouseUpRight);
   }
