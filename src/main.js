@@ -121,6 +121,25 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // Mouse move
   function onMouseMoveRight(e) {
+    const minRightWidth = 160;
+    const minMainWidth = 300;
+    const total = appWrapper.clientWidth;
+    const leftW = sidebar.offsetWidth;
+    const leftResizerW = leftResizer.offsetWidth || 5;
+    const rightResizerW = rightResizer.offsetWidth || 5;
+
+    let newRightW = total - e.clientX;
+
+    if (newRightW < minRightWidth) {
+      newRightW = minRightWidth;
+    }
+
+    const maxRightW = total - leftW - leftResizerW - rightResizerW - minMainWidth;
+    if (newRightW > maxRightW) {
+      newRightW = Math.max(minRightWidth, maxRightW);
+    }
+
+    rightSidebar.style.width = `${newRightW}px`;
 
   }
 
