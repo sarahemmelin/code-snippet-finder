@@ -1,3 +1,5 @@
+import { log, getMinWidthPx } from './utils.mjs'
+
 /*
 TO DO:
 [X] 1. Implementere funksjonalitet for right sidebar resizer.
@@ -10,35 +12,6 @@ TO DO:
 6. Refaktorere koden, fjerne duplikater og rydde enda mer.
 7. Lage dokumentasjon for hvordan dette fungerer.
 */
-
-// --- DEBUG MODE -----------
-const DEBUG = true;
-
-function log(...args) {
-  if (DEBUG) {
-    console.log(...args);
-  }
-};
-// --- END DEBUG MODE ---------
-
-// --- HELP FUNCTIONS ---------
-function getMinWidthPx(target, fallback) {
-  let element = null;
-
-  if (typeof target === "string"){
-    element = document.querySelector(target);
-  } else if (target && target.nodeType === 1) {
-    element = target;
-  }
-  if (!element) {
-    log("Element not found, using fallback:", target, fallback);
-    return fallback;
-  }
-  
-  const v = parseInt(getComputedStyle(element).minWidth);
-  return Number.isFinite(v) && v > 0 ? v : fallback;
-}
-// --- END HELP FUNCTIONS -----
 
 
 const rightResizer = document.querySelector('.resizer-right');
