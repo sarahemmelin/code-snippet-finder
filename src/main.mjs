@@ -1,4 +1,8 @@
-import { log, getMinWidthPx } from './utils.mjs'
+import { 
+  log, 
+  getMinWidthPx,
+  clamp
+} from './utils.mjs'
 
 /*
 TO DO:

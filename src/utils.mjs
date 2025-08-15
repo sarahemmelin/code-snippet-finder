@@ -9,6 +9,7 @@ function log(...args) {
 // --- END DEBUG MODE ---------
 
 // --- HELP FUNCTIONS ---------
+// --- get minimum width ---//
 function getMinWidthPx(target, fallback) {
   let element = null;
 
@@ -25,9 +26,18 @@ function getMinWidthPx(target, fallback) {
   const v = parseInt(getComputedStyle(element).minWidth);
   return Number.isFinite(v) && v > 0 ? v : fallback;
 }
+
+// --- clamper ---
+function clamp(value, min, max) {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}
+
 // --- END HELP FUNCTIONS -----
 
 export {
   log,
-  getMinWidthPx
+  getMinWidthPx,
+  clamp
 };
